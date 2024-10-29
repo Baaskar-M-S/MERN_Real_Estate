@@ -59,7 +59,7 @@ export const HomeLayout =()=>{
   return (
     <>
     
-    <ImgCard/>
+  
     <SinglePage/>
     
     </>
@@ -72,7 +72,8 @@ const App = () => {
   return (
     <>
       <Routes>
-        <Route path="/"  element={<Apartments/>} />
+        <Route path="/" element={<SinglePage/>} />
+        <Route path="/apartments"  element={<Apartments/>} />
         <Route path="/login" element={<Login />} />
         <Route path="/registration" element={<Signup />} />
 

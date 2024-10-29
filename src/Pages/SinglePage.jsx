@@ -1,13 +1,14 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const SinglePage = () => {
   return (
     <div className="p-8 bg-gray-100 min-h-screen">
-      {/* Header */}
+      {/* Breadcrumb */}
       <div className="text-gray-700 mb-4">
-        <p>Chennai Properties/Flats for sale in Chennai/882 Sq.ft 2BHK</p>
+        <p>Chennai Properties / Flats for sale in Chennai / 882 Sq.ft 2BHK</p>
       </div>
-      
+
       {/* Main Container */}
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Left Column - Property Image and Details */}
@@ -23,7 +24,7 @@ const SinglePage = () => {
           
           <div className="text-gray-600">
             <h3 className="font-semibold text-lg mb-2">Description</h3>
-            <p>Check out the Property is located in Madipakkam, Ram Nagar South and it’s a perfect property for you. Enjoy excellent living with amenities like Modular Kitchen, Tiled Flooring, Fully Interior Designed Home, Pooja Unit, Cup Board/Wardrobe, Super false ceiling, Car parking, and more.</p>
+            <p>Check out this property located in Madipakkam, Ram Nagar South. It’s a perfect choice for you, with amenities like a modular kitchen, tiled flooring, fully interior-designed home, pooja unit, wardrobe, false ceiling, car parking, and more.</p>
           </div>
         </div>
 
@@ -41,18 +42,18 @@ const SinglePage = () => {
               </div>
             </div>
           </div>
-          
+
           <div>
             <h3 className="font-semibold text-lg mb-4">Quick Links</h3>
             <ul className="space-y-2 text-blue-600">
-              <li><a href="#">Flats For Sale In Madipakkam</a></li>
-              <li><a href="#">Individual House For Sale In Madipakkam</a></li>
-              <li><a href="#">Plots For Sale In Madipakkam</a></li>
+              <li><Link>Flats For Sale In Madipakkam</Link></li>
+              <li><Link>Individual House For Sale In Madipakkam</Link></li>
+              <li><Link>Plots For Sale In Madipakkam</Link></li>
             </ul>
           </div>
         </div>
       </div>
-      
+
       {/* Essentials Information */}
       <div className="bg-white p-6 mt-8 shadow-lg rounded">
         <h3 className="text-lg font-semibold mb-4">Essentials Information</h3>
@@ -77,12 +78,14 @@ const SinglePage = () => {
           <div><strong>Transaction:</strong> Resale</div>
         </div>
 
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm text-gray-700">
-        <h1 className='text-3xl'>Description</h1>
-        <p>
-Check outt this 2 BHK, 693 sqft, villa is located in Nandivaram Guduvancheri. Individual Villa House For Sale Just 43 Lakhs Budget In Chennai-Guduvanchery. Possession is from 22, Oct 2024. The villa is available for INR 4300000/-, negotiable.
-     </p></div> </div>
+        {/* Additional Description */}
+        <div className="mt-8">
+          <h3 className="text-3xl mb-4">Description</h3>
+          <p>
+            Check out this 2 BHK, 693 sqft villa located in Nandivaram Guduvancheri. Individual villa house for sale at just ₹43 Lakh in Chennai-Guduvancheri. Possession from 22 Oct 2024. Available for INR 43,00,000, negotiable.
+          </p>
+        </div>
+      </div>
     </div>
   );
 };
