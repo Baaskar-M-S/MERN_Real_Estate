@@ -35,8 +35,8 @@ const managementLinks = [
     icon: <BiSolidDashboard size={18} />,
   },
   {
-    to: "/dashboard/properties",
-    label: "Properties",
+    to: "/dashboard/property",
+    label: "Property",
     icon: <IoMdAnalytics size={18} />,
   },
   {

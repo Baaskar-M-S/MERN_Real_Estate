@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import ImgCard from './ImgCard';
+import ImgCard from '../Components/ImgCard/ApartmentImgCard';
 import SmallImgCard from '../Components/SmallImgCard';
 
 const Apartments = () => {
