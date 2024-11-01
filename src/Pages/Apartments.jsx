@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import ImgCard from '../Components/ImgCard/ApartmentImgCard';
+import ApartmentImgCard from '../Components/ImgCard/ApartmentImgCard';
 import SmallImgCard from '../Components/SmallImgCard';
 
 const Apartments = () => {
@@ -40,8 +40,8 @@ const Apartments = () => {
        
         {/* Apartments List */}
         <div className="w-full md:w-3/4 space-y-4">
-          {[...Array(5)].map((_, index) => (
-            <ImgCard key={index} />
+        {[...Array(5)].map((_, index) => (
+            <ApartmentImgCard key={index} />
           ))}
           <div className='flex justify-center items-center'>  
             <button className='bg-red-500 text-2xl text-white px-6 py-3 rounded-xl'>Show more results</button>

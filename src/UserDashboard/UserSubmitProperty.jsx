@@ -1,7 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-
+import Form from '../Components/Form'
 const UserSubmitProperty = () => {
+  const userId = localStorage.getItem("userId");
+
   return (
     <div>
        <div className="flex justify-between items-center shadow-lg p-4">
@@ -20,6 +22,8 @@ const UserSubmitProperty = () => {
           </button>
         </div>
       </div>
+
+      <Form/>
     </div>
   )
 }

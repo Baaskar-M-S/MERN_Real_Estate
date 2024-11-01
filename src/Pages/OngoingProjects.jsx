@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import ImgCard from '../Components/ImgCard/ApartmentImgCard';
 import SmallImgCard from '../Components/SmallImgCard';
+import OngoingProjectImgCard from '../Components/ImgCard/OngoingProjectImgCard';
 
 const OngoingProject = () => {
   const [showMore, setShowMore] = useState(false);
@@ -41,7 +41,7 @@ const OngoingProject = () => {
         {/* Apartments List */}
         <div className="w-full md:w-3/4 space-y-4">
           {[...Array(5)].map((_, index) => (
-            <ImgCard key={index} />
+            <OngoingProjectImgCard key={index} />
           ))}
           <div className='flex justify-center items-center'>  
             <button className='bg-red-500 text-2xl text-white px-6 py-3 rounded-xl'>Show more results</button>

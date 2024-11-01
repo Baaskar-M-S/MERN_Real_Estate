@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import EMICalculator from "../Components/EmiCalculator";
 import LocationMap from "../Components/MapChennai";
 
-const SinglePage = () => {
+const SingleOngoingProject= () => {
   return (
     <div className="px-24 py-3 bg-gray-100 min-h-screen">
       {/* Breadcrumb */}
@@ -151,4 +151,4 @@ const SinglePage = () => {
   );
 };
 
-export default SinglePage;
+export default SingleOngoingProject

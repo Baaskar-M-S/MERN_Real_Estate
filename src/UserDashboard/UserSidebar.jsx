@@ -3,6 +3,9 @@ import { IoMdAdd } from "react-icons/io";
 import { Link } from "react-router-dom";
 
 const UserSidebar = () => {
+
+  const userId = localStorage.getItem("userId");
+
   const links = [
     { path: "dashboard", label: "My Dashboard" },
     { path: "submit-property", label: "Submit Property" },
@@ -11,7 +14,7 @@ const UserSidebar = () => {
     { path: "sponsor-ad", label: "Sponsor Your Ad" },
     { path: "view-profile", label: "View Profile" },
     { path: "change-password", label: "Change Password" },
-    { path: "logout", label: "Logout" },
+    { path: "/", label: "Logout" },
   ];
 
   return (

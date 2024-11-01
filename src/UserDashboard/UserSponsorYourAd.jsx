@@ -1,7 +1,13 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import PricingTable from '../Components/SponsarAd'
 
 const UserSponsorYourAd = () => {
+  const userId = localStorage.getItem("userId");
+
+
+
+
   return (
     <div>
 
@@ -20,6 +26,7 @@ const UserSponsorYourAd = () => {
           </button>
         </div>
       </div>
+<PricingTable/>
     </div>
   )
 }

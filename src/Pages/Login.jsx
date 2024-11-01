@@ -5,62 +5,57 @@ import background from '../Assets/Background.png';
 
 const Login = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    email: '',
-    otp: '',
-  });
+  const [formData, setFormData] = useState({ email: '', password: '', captcha: '' });
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loadingRequest, setLoadingRequest] = useState(false);
   const [success, setSuccess] = useState('');
+  const CAPTCHA_CODE = "035480"; // Set default captcha value
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleRequestOtp = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
     setSuccess('');
-    setLoading(true);
+    setLoadingRequest(true);
+
+    // Check captcha before making the login request
+    if (formData.captcha !== CAPTCHA_CODE) {
+      setError("Invalid captcha.");
+      setLoadingRequest(false);
+      return;
+    }
 
     try {
-      const response = await axios.post("http://localhost:7000/request-otp", { email: formData.email }, {
-        headers: { "Content-Type": "application/json" }
-      });
+      const response = await axios.post("http://localhost:7000/login", 
+        { email: formData.email, password: formData.password }, 
+        {
+          headers: { "Content-Type": "application/json" }
+        }
+      );
 
       if (response.status === 200) {
-        setSuccess("OTP sent to your email!");
+        setSuccess("Login successful!");
+
+        // Fetch user details to get the user ID
+        const userResponse = await axios.get(`http://localhost:7000/user/${formData.email}`, {
+          headers: { "Content-Type": "application/json" }
+        });
+        const userId = userResponse.data.id;
+        localStorage.setItem("userId", userId); // Store in local storage
+        navigate(`/user/dashboard/${userId}`);
+        // const userId = userResponse.data.id; // Extract the user ID from the response
+        // setTimeout(() => navigate(`/user/dashboard/${userId}`), 2000);
       } else {
         setError(response.data.message || "An unexpected error occurred.");
       }
     } catch (err) {
       setError(err.response?.data?.message || "An error occurred");
     } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleVerifyOtp = async (e) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
-
-    try {
-      const response = await axios.post("http://localhost:7000/verify-otp", { email: formData.email, otp: formData.otp }, {
-        headers: { "Content-Type": "application/json" }
-      });
-
-      if (response.status === 200) {
-        setSuccess("OTP verified successfully!");
-        setTimeout(() => navigate('/'), 2000);
-      } else {
-        setError(response.data.message || "Invalid OTP.");
-      }
-    } catch (err) {
-      setError(err.response?.data?.message || "An error occurred");
-    } finally {
-      setLoading(false);
+      setLoadingRequest(false);
     }
   };
 
@@ -74,7 +69,7 @@ const Login = () => {
         backgroundRepeat: 'no-repeat',
       }}
     >
-      <form onSubmit={handleRequestOtp} className="w-full max-w-md bg-white p-6 rounded-3xl  shadow-md">
+      <form onSubmit={handleLogin} className="w-full max-w-md bg-white p-6 rounded-3xl shadow-md">
         <h2 className="text-center text-3xl mb-4">Login</h2>
 
         <input
@@ -87,37 +82,33 @@ const Login = () => {
           required
         />
 
-        <button
-          className="p-3 w-full rounded-lg bg-slate-500 uppercase text-white mt-4"
-          type="submit"
-          disabled={loading}
-        >
-          {loading ? "Sending OTP..." : "Send OTP"}
-        </button>
-
-        {success && <p className="text-green-500 text-center mb-4">{success}</p>}
-        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-      </form>
-
-      <form onSubmit={handleVerifyOtp} className="w-full max-w-md bg-white p-6 rounded-lg shadow-md mt-4">
-        <h2 className="text-center text-3xl mb-4">Verify OTP</h2>
-
         <input
           className="border p-3 rounded-lg w-full mb-4"
-          name="otp"
-          placeholder="Enter OTP"
-          type="text"
-          value={formData.otp}
+          name="password"
+          placeholder="Password"
+          type="password"
+          value={formData.password}
           onChange={handleChange}
           required
         />
 
+        <input
+          className="border p-3 rounded-lg w-full mb-4"
+          name="captcha"
+          placeholder="Enter Captcha"
+          type="text"
+          value={formData.captcha}
+          onChange={handleChange}
+          required
+        />
+        <p className="text-center text-gray-600 mb-2">Captcha: {CAPTCHA_CODE}</p>
+
         <button
           className="p-3 w-full rounded-lg bg-slate-500 uppercase text-white mt-4"
           type="submit"
-          disabled={loading}
+          disabled={loadingRequest}
         >
-          {loading ? "Verifying..." : "Verify OTP"}
+          {loadingRequest ? "Logging in..." : "Login"}
         </button>
 
         {success && <p className="text-green-500 text-center mb-4">{success}</p>}
@@ -125,7 +116,10 @@ const Login = () => {
       </form>
 
       <div className="mt-4 text-center">
-        <p>Don’t have an account?</p>
+        <Link to="/forgot-password" className="text-blue-500 hover:text-blue-700">
+          Forgot Password?
+        </Link>
+        <p className="mt-4">Don’t have an account?</p>
         <Link to="/registration" className="text-blue-500 hover:text-blue-700">
           Register
         </Link>

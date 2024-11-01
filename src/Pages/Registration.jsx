@@ -1,50 +1,41 @@
 import { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-
 import background from '../Assets/Background.png';
+
 const Signup = () => {
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    type: '',
-    name: '',
-    email: '',
-    password: '',
-    mobileNumber: '',
-    companyName: '',
-  });
+  const [name, setName] = useState('');
+  const [mobileNumber, setMobileNumber] = useState('');
+  const [type, setType] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [companyName, setCompanyName] = useState('');
+  const [img, setImg] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState('');
+  const [loading, setLoading] = useState(false);
+  
+  const navigate = useNavigate();
 
-  // Handle input changes
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-  };
-
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
-    setLoading(true);
+    const newUser = { name, mobileNumber, type, email, password, companyName, img };
+    
+    setLoading(true); // Start loading
 
     try {
-      const response = await axios.post("http://localhost:7000/register", formData, {
-        headers: { "Content-Type": "application/json" }
-      });
-
-      if (response.status === 201) { // Check for success status
+      const response = await axios.post("http://localhost:7000/register", newUser);
+      
+      if (response.status === 201) {
         setSuccess("User registered successfully!");
         setTimeout(() => navigate('/login'), 2000); // Redirect after success
       } else {
         setError(response.data.message || "An unexpected error occurred.");
       }
-    } catch (err) {
-      setError(err.response?.data?.message || "An error occurred");
+    } catch (error) {
+      setError(error.response?.data?.message || "An error occurred");
     } finally {
-      setLoading(false);
+      setLoading(false); // Stop loading
     }
   };
 
@@ -55,74 +46,71 @@ const Signup = () => {
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
     }}
-     className="h-screen bg-blue-100 flex flex-col gap-5 justify-center items-center">
-      <form onSubmit={handleSubmit} className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-center text-3xl mb-4">Sign Up</h2>
-
-        <select
-          className="border p-3 rounded-lg w-full mb-4"
-          name="type"
-          value={formData.type}
-          onChange={handleChange}
+      className="h-screen bg-blue-100 flex flex-col gap-5 justify-center items-center">
+     
+     
+     
+     <h1 className="text-4xl font-semibold">Registration</h1>
+      <form onSubmit={handleSubmit} className="flex flex-col w-full max-w-md bg-white p-6 rounded-lg shadow-md">
+        <input 
+          type="text" 
+          placeholder="Name" 
+          value={name} 
+          onChange={(e) => setName(e.target.value)} 
+          className="border p-2 mb-4"
+          required
+        />
+        <input 
+          type="text" 
+          placeholder="Mobile Number" 
+          value={mobileNumber} 
+          onChange={(e) => setMobileNumber(e.target.value)} 
+          className="border p-2 mb-4"
+          required
+        />
+        <select 
+          value={type} 
+          onChange={(e) => setType(e.target.value)} 
+          className="border p-2 mb-4"
           required
         >
-          <option value="" disabled>Select your type</option>
+          <option value="" disabled>Select User Type</option>
           <option value="owner">Owner</option>
-          <option value="agent">Agent/Agency</option>
+          <option value="agent/agency">Agent/Agency</option>
           <option value="builder">Builder</option>
           <option value="promoter">Promoter</option>
         </select>
-
-        <input
-          className="border p-3 rounded-lg w-full mb-4"
-          name="name"
-          placeholder="Name"
-          type="text"
-          value={formData.name}
-          onChange={handleChange}
+        <input 
+          type="email" 
+          placeholder="Email" 
+          value={email} 
+          onChange={(e) => setEmail(e.target.value)} 
+          className="border p-2 mb-4"
           required
         />
-
-        <input
-          className="border p-3 rounded-lg w-full mb-4"
-          name="email"
-          placeholder="Email"
-          type="email"
-          value={formData.email}
-          onChange={handleChange}
+        <input 
+          type="password" 
+          placeholder="Password" 
+          value={password} 
+          onChange={(e) => setPassword(e.target.value)} 
+          className="border p-2 mb-4"
           required
         />
-
-        <input
-          className="border p-3 rounded-lg w-full mb-4"
-          name="password"
-          placeholder="Password"
-          type="password"
-          value={formData.password}
-          onChange={handleChange}
-          required
+        <input 
+          type="text" 
+          placeholder="Company Name" 
+          value={companyName} 
+          onChange={(e) => setCompanyName(e.target.value)} 
+          className="border p-2 mb-4"
         />
-
-        <input
-          className="border p-3 rounded-lg w-full mb-4"
-          name="mobileNumber"
-          placeholder="Mobile Number"
-          type="tel"
-          value={formData.mobileNumber}
-          onChange={handleChange}
-          required
+        <input 
+          type="text" 
+          placeholder="Image URL" 
+          value={img} 
+          onChange={(e) => setImg(e.target.value)} 
+          className="border p-2 mb-4"
         />
-
-        <input
-          className="border p-3 rounded-lg w-full mb-4"
-          name="companyName"
-          placeholder="Company Name"
-          type="text"
-          value={formData.companyName}
-          onChange={handleChange}
-          required
-        />
-
+        
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
         {success && <p className="text-green-500 text-center mb-4">{success}</p>}
 
@@ -134,7 +122,6 @@ const Signup = () => {
           {loading ? "Registering..." : "Register"}
         </button>
 
-     
         <div className="mt-4 text-center">
           <p>Already have an account?</p>
           <Link to="/login" className="text-blue-500 hover:text-blue-700">

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { FaShareAlt } from "react-icons/fa";
+import { Link } from 'react-router-dom';
 
-const ImgCard = () => {
+const ApartmentImgCard = () => {
   const [showMore, setShowMore] = useState(false);
 
   const toggleShowMore = () => setShowMore(!showMore);
@@ -29,8 +30,8 @@ const ImgCard = () => {
           
           {/* Image and Owner Section */}
           <div className="flex-shrink-0 w-1/3 py-3 px-3 ">
-            <img src={property.imageUrl} alt={property.title} className="object-center h-[185px] w-[266px]" />
-            <div className="flex flex-col items-center py-3">
+          <Link to={`/${property.id}`}> <img src={property.imageUrl} alt={property.title} className="object-center h-[185px] w-[266px]" />
+           </Link>  <div className="flex flex-col items-center py-3">
               <p className="text-gray-600 text-sm">Owner</p>
               <h2 className="font-semibold text-gray-800">{property.owner}</h2>
             </div>
@@ -101,4 +102,4 @@ const ImgCard = () => {
   );
 };
 
-export default ImgCard;
+export default ApartmentImgCard;
