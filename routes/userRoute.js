@@ -1,15 +1,86 @@
 const express = require("express");
-const User = require("../models/userModel"); // Replace with the path to your model
+
+const User = require("../models/userModel");
 const router = express.Router();
 require("dotenv").config();
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
-const Login = require("../models/loginModel"); // Adjust the path as necessary
 
-// Create a new user
+
+
+
+
+
+// Route to find user by email
+router.get("/user/:email", async (req, res) => {
+  const { email } = req.params; // Get email from URL parameters
+
+  try {
+    const user = await User.findOne({ email }); // Find user by email
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Return the user's ID and any other information you need
+    res.json({ id: user._id, name: user.name, email: user.email });
+  } catch (error) {
+    console.error("Error finding user by email:", error);
+    res.status(500).json({ message: "An error occurred" });
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    // Find user by email
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    // if (!user.isVerified) {
+    //   return res.status(403).json({ message: "Email not verified" });
+    // }
+
+    // Compare entered password with stored password
+    if (password !== user.password) {
+      return res.status(403).json({ message: "Invalid password" });
+    }
+
+    // Login success
+    res.status(200).json({ message: "Login successful" });
+  } catch (error) {
+    console.error("Error during login:", error);
+    res.status(500).json({ message: "An error occurred during login" });
+  }
+});
 router.post("/register", async (req, res) => {
   try {
-    const { type, name, email, password, mobileNumber, companyName } = req.body;
+    const { type, name, email, password, mobileNumber, companyName, img, role } = req.body;
+
     const newUser = new User({
       type,
       name,
@@ -17,6 +88,8 @@ router.post("/register", async (req, res) => {
       password,
       mobileNumber,
       companyName,
+      img,
+      role
     });
     await newUser.save();
     res.status(201).json(newUser);
@@ -24,6 +97,9 @@ router.post("/register", async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
+
+
+
 
 // Get all users
 router.get("/users", async (req, res) => {
@@ -71,80 +147,7 @@ router.delete("/users/:id", async (req, res) => {
   }
 });
 
-// Function to generate OTP
-const generateOTP = () => {
-  return crypto.randomInt(100000, 999999).toString(); // Generates a random 6-digit OTP
-};
 
-// Login route
-router.post("/login", async (req, res) => {
-  const { email } = req.body;
 
-  try {
-    // Find user by email
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    // Generate OTP
-    const otp = generateOTP();
-    user.otp = otp;
-    user.otpExpires = Date.now() + 300000; // OTP expires in 5 minutes
-    await user.save();
-
-    // Send OTP via email
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: "Your OTP Code",
-      text: `Your OTP code is: ${otp}. It will expire in 5 minutes.`,
-    });
-
-    res.status(200).json({ message: "OTP sent successfully" });
-  } catch (error) {
-    console.error("Error during OTP generation or sending:", error);
-    res
-      .status(500)
-      .json({ message: "An error occurred while sending the OTP" });
-  }
-});
-
-// OTP verification route
-router.post("/verify-otp", async (req, res) => {
-  const { email, otp } = req.body;
-
-  try {
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    if (user.otp !== otp || Date.now() > user.otpExpires) {
-      return res.status(400).json({ message: "Invalid or expired OTP" });
-    }
-
-    // OTP is valid; log the user in (implement your logic here)
-    res.status(200).json({ message: "Login successful" });
-
-    // Clear OTP after successful verification
-    user.otp = undefined;
-    user.otpExpires = undefined;
-    await user.save();
-  } catch (error) {
-    console.error("Error during OTP verification:", error);
-    res
-      .status(500)
-      .json({ message: "An error occurred during OTP verification" });
-  }
-});
 
 module.exports = router;

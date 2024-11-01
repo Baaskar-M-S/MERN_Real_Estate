@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
   },
   name: {
     type: String,
-    required: true,
+    required: false,
     trim: true
   },
   email: {
@@ -21,39 +21,27 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    minlength: 6
+    minlength: 2
   },
   mobileNumber: {
-    type: Number,
-    required: true,
+    type: Number, // changed to String
+    required: false,
     unique: true,
     match: [/^[0-9]{10}$/, 'is invalid']
   },
   companyName: {
     type: String,
-    required: false,
     trim: true
   },
-  address: {
+  img: {
     type: String,
-    required: false,
-
+  
   },
-  img:{
-    type:String,
-    required:false
-  },
-  // otp: {
-  //   type: String,
-  //   required: true,
-  // },
-  // otpExpires: {
-  //   type: Date,
-  //   required: true,
-  // },
-  role:{
-    type:String,}
-    
+  role: {
+    type: String,
+    enum: ['Admin', 'Editor', 'Customer'],
+    default: 'Customer' 
+  }
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);
